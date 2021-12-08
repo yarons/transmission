@@ -136,7 +136,7 @@ tr_qt_wrap_ui(${PROJECT_NAME}_UI_SOURCES
 
 set(${PROJECT_NAME}_QRC_FILES application.qrc)
 if(WIN32 OR APPLE)
-    list(APPEND ${PROJECT_NAME}_QRC_FILES icons/Faenza/Faenza.qrc)
+    list(APPEND ${PROJECT_NAME}_QRC_FILES icons/Win11/Win11.qrc)
 endif()
 
 tr_qt_add_resources(${PROJECT_NAME}_QRC_SOURCES ${${PROJECT_NAME}_QRC_FILES})
