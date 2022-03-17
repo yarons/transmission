@@ -45,8 +45,11 @@ class FileTest : public SessionTest
 protected:
     auto createTestDir(std::string const& child_name)
     {
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         auto test_dir = tr_strvPath(tr_sessionGetConfigDir(session_), child_name);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_sys_dir_create(std::data(test_dir), 0, 0777, nullptr);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         return test_dir;
     }
 
@@ -221,11 +224,17 @@ protected:
 
 TEST_F(FileTest, getInfo)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     tr_sys_path_info info;
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const path1 = tr_strvPath(test_dir, "a"sv);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const path2 = tr_strvPath(test_dir, "b"sv);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
     // Can't get info of non-existent file/directory
     tr_error* err = nullptr;
@@ -257,6 +266,7 @@ TEST_F(FileTest, getInfo)
     tr_sys_file_close(fd, nullptr);
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
     // Good directory info
     t = time(nullptr);
@@ -270,6 +280,7 @@ TEST_F(FileTest, getInfo)
     EXPECT_LE(info.last_modified_at, time(nullptr) + 1);
     tr_sys_path_remove(path1.c_str(), nullptr);
 
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     if (createSymlink(path1.c_str(), path2.c_str(), false))
     {
         // Can't get info of non-existent file/directory
@@ -322,10 +333,12 @@ TEST_F(FileTest, getInfo)
     {
         fprintf(stderr, "WARNING: [%s] unable to run symlink tests\n", __FUNCTION__);
     }
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathExists)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir.data(), "a"sv);
@@ -377,10 +390,12 @@ TEST_F(FileTest, pathExists)
     {
         fprintf(stderr, "WARNING: [%s] unable to run symlink tests\n", __FUNCTION__);
     }
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathIsRelative)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     EXPECT_TRUE(tr_sys_path_is_relative(""));
     EXPECT_TRUE(tr_sys_path_is_relative("."));
     EXPECT_TRUE(tr_sys_path_is_relative(".."));
@@ -423,10 +438,12 @@ TEST_F(FileTest, pathIsRelative)
     EXPECT_FALSE(tr_sys_path_is_relative("//x"));
 
 #endif /* _WIN32 */
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathIsSame)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -626,10 +643,12 @@ TEST_F(FileTest, pathIsSame)
     tr_sys_path_remove(path3.c_str(), nullptr);
     tr_sys_path_remove(path2.c_str(), nullptr);
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathResolve)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     tr_error* err = nullptr;
@@ -683,10 +702,12 @@ TEST_F(FileTest, pathResolve)
     }
 
 #endif
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathBasenameDirname)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const common_xname_tests = std::vector<XnameTestData>{
         XnameTestData{ "/", "/" },
         { "", "." },
@@ -781,10 +802,12 @@ TEST_F(FileTest, pathBasenameDirname)
     testPathXname(dirname_tests.data(), dirname_tests.size(), tr_sys_path_dirname);
 
     /* TODO: is_same(dirname(x) + '/' + basename(x), x) */
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathRename)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -888,10 +911,12 @@ TEST_F(FileTest, pathRename)
     }
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathRemove)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir.data(), "a"sv);
@@ -933,10 +958,12 @@ TEST_F(FileTest, pathRemove)
 
     tr_sys_path_remove(path3.c_str(), nullptr);
     tr_sys_path_remove(path2.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, pathNativeSeparators)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     EXPECT_EQ(nullptr, tr_sys_path_native_separators(nullptr));
 
     struct LocalTest
@@ -960,10 +987,12 @@ TEST_F(FileTest, pathNativeSeparators)
         EXPECT_EQ(test.expected_output, output);
         EXPECT_EQ(buf.data(), output);
     }
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, fileOpen)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     // can't open non-existent file
@@ -1051,10 +1080,12 @@ TEST_F(FileTest, fileOpen)
     /* TODO: symlink and hardlink tests */
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, fileReadWriteSeek)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -1134,10 +1165,12 @@ TEST_F(FileTest, fileReadWriteSeek)
     tr_sys_file_close(fd, nullptr);
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, fileTruncate)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -1179,10 +1212,12 @@ TEST_F(FileTest, fileTruncate)
     EXPECT_EQ(25, info.size);
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, filePreallocate)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -1228,10 +1263,12 @@ TEST_F(FileTest, filePreallocate)
     tr_sys_file_close(fd, nullptr);
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, map)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -1265,10 +1302,12 @@ TEST_F(FileTest, map)
     tr_sys_file_close(fd, nullptr);
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, fileUtilities)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -1356,10 +1395,12 @@ TEST_F(FileTest, fileUtilities)
     tr_sys_file_close(fd, nullptr);
 
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, dirCreate)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir.data(), "a"sv);
@@ -1407,10 +1448,12 @@ TEST_F(FileTest, dirCreate)
 
     tr_sys_path_remove(path2.c_str(), nullptr);
     tr_sys_path_remove(path1.c_str(), nullptr);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 TEST_F(FileTest, dirRead)
 {
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     auto const test_dir = createTestDir(currentTestName());
 
     auto const path1 = tr_strvPath(test_dir, "a"sv);
@@ -1436,6 +1479,7 @@ TEST_F(FileTest, dirRead)
     testDirReadImpl(test_dir, &have1, &have2);
     EXPECT_FALSE(have1);
     EXPECT_TRUE(have2);
+    std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 }
 
 } // namespace test

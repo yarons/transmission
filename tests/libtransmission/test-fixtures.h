@@ -8,10 +8,13 @@
 #include <chrono>
 #include <cstdlib> // getenv()
 #include <cstring> // strlen()
+#include <iostream>
 #include <memory>
 #include <mutex> // std::once_flag()
 #include <string>
 #include <thread>
+
+#include <fmt/core.h>
 
 #include "crypto-utils.h" // tr_base64_decode()
 #include "error.h"
@@ -195,7 +198,7 @@ protected:
             tr_error* error = nullptr;
             if (!tr_sys_file_write(fd, left, n_left, &n, &error))
             {
-                fprintf(stderr, "Error writing file: '%s'\n", error->message);
+                std::cerr << fmt::format("Error writing file: {} ({})", error->message, error->code) << std::endl;
                 tr_error_free(error);
                 break;
             }
@@ -295,53 +298,77 @@ private:
 
     tr_session* sessionInit(tr_variant* settings)
     {
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         ensureFormattersInited();
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
         // download dir
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         auto sv = std::string_view{};
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         auto q = TR_KEY_download_dir;
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         auto const download_dir = tr_variantDictFindStrView(settings, q, &sv) ? tr_strvPath(sandboxDir(), sv) :
                                                                                 tr_strvPath(sandboxDir(), "Downloads");
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_sys_dir_create(download_dir.data(), TR_SYS_DIR_CREATE_PARENTS, 0700, nullptr);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_variantDictAddStr(settings, q, download_dir.data());
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
         // incomplete dir
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         q = TR_KEY_incomplete_dir;
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         auto const incomplete_dir = tr_variantDictFindStrView(settings, q, &sv) ? tr_strvPath(sandboxDir(), sv) :
                                                                                   tr_strvPath(sandboxDir(), "Incomplete");
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_variantDictAddStr(settings, q, incomplete_dir.data());
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
         // blocklists
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         auto const blocklist_dir = tr_strvPath(sandboxDir(), "blocklists");
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_sys_dir_create(blocklist_dir.data(), TR_SYS_DIR_CREATE_PARENTS, 0700, nullptr);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
 
         // fill in any missing settings
 
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         q = TR_KEY_port_forwarding_enabled;
         if (tr_variantDictFind(settings, q) == nullptr)
         {
             tr_variantDictAddBool(settings, q, false);
         }
 
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         q = TR_KEY_dht_enabled;
         if (tr_variantDictFind(settings, q) == nullptr)
         {
             tr_variantDictAddBool(settings, q, false);
         }
 
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         q = TR_KEY_message_level;
         if (tr_variantDictFind(settings, q) == nullptr)
         {
             tr_variantDictAddInt(settings, q, verbose ? TR_LOG_DEBUG : TR_LOG_ERROR);
         }
 
-        return tr_sessionInit(sandboxDir().data(), !verbose, settings);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
+        auto* ret = tr_sessionInit(sandboxDir().data(), !verbose, settings);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
+        return ret;
     }
 
     void sessionClose(tr_session* session)
     {
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_sessionClose(session);
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
         tr_logFreeQueue(tr_logGetQueue());
+        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;
     }
 
 protected:
