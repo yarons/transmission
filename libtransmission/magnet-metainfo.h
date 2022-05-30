@@ -64,7 +64,10 @@ public:
 
     void setName(std::string_view name)
     {
-        name_ = name;
+        if (name_ != name)
+        {
+            name_ = name;
+        }
     }
 
     void addWebseed(std::string_view webseed);
