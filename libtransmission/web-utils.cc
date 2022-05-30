@@ -13,9 +13,6 @@
 #include <string>
 #include <string_view>
 
-#warning nocommit
-#include <iostream>
-
 #include <fmt/format.h>
 
 #define PSL_STATIC
@@ -255,12 +252,12 @@ bool tr_isValidTrackerScheme(std::string_view scheme)
     return std::find(std::begin(Schemes), std::end(Schemes), scheme) != std::end(Schemes);
 }
 
-bool isAsciiLowerCase(std::string_view host)
+bool isAsciiNonUpperCase(std::string_view host)
 {
     return std::all_of(
         std::begin(host),
         std::end(host),
-        [](unsigned char ch) { return (ch < 128) && (std::islower(ch) != 0); });
+        [](unsigned char ch) { return (ch < 128) && (std::isupper(ch) == 0); });
 }
 
 // www.example.com -> example
@@ -285,7 +282,7 @@ std::string_view getSiteName(std::string_view host)
     }
 
     // is it a registered name?
-    if (isAsciiLowerCase(host))
+    if (isAsciiNonUpperCase(host))
     {
         if (char const* const top = psl_registrable_domain(psl_builtin(), std::data(szhost)); top != nullptr)
         {
@@ -294,7 +291,6 @@ std::string_view getSiteName(std::string_view host)
     }
     else if (char* lower = nullptr; psl_str_to_utf8lower(std::data(szhost), nullptr, nullptr, &lower) == PSL_SUCCESS)
     {
-        std::cerr << __FILE__ << ':' << __LINE__ << ' ' << lower << std::endl;
         // www.example.com -> example.com
         if (char const* const top = psl_registrable_domain(psl_builtin(), lower); top != nullptr)
         {
