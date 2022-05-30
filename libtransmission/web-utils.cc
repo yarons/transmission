@@ -13,6 +13,9 @@
 #include <string>
 #include <string_view>
 
+#warning nocommit
+#include <iostream>
+
 #include <fmt/format.h>
 
 #define PSL_STATIC
@@ -291,6 +294,7 @@ std::string_view getSiteName(std::string_view host)
     }
     else if (char* lower = nullptr; psl_str_to_utf8lower(std::data(szhost), nullptr, nullptr, &lower) == PSL_SUCCESS)
     {
+        std::cerr << __FILE__ << ':' << __LINE__ << ' ' << lower << std::endl;
         // www.example.com -> example.com
         if (char const* const top = psl_registrable_domain(psl_builtin(), lower); top != nullptr)
         {
