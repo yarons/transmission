@@ -66,7 +66,7 @@ struct tr_ctor
 ****
 ***/
 
-bool tr_ctorSetMetainfoFromFile(tr_ctor* ctor, std::string const& filename, tr_error** error)
+bool tr_ctorSetMetainfoFromFile(tr_ctor* ctor, std::string_view filename, tr_error** error)
 {
     if (std::empty(filename))
     {
