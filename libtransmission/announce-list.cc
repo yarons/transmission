@@ -93,7 +93,7 @@ bool tr_announce_list::add(std::string_view announce_url_sv, tr_tracker_tier_t t
     }
 
     auto const it = std::lower_bound(std::begin(trackers_), std::end(trackers_), tracker);
-    trackers_.insert(it, tracker);
+    trackers_.insert(it, std::move(tracker));
 
     return true;
 }
