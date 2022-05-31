@@ -2049,10 +2049,7 @@ static void sessionLoadTorrents(struct sessionLoadTorrentsData* const data)
             {
                 if (auto buf = std::vector<char>{}; tr_loadFile(path, buf))
                 {
-                    tr_ctorSetMetainfoFromMagnetLink(
-                        data->ctor,
-                        std::string{ std::data(buf), std::size(buf) }.c_str(),
-                        nullptr);
+                    tr_ctorSetMetainfoFromMagnetLink(data->ctor, std::string_view{ std::data(buf), std::size(buf) }, nullptr);
                 }
             }
 
