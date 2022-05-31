@@ -132,9 +132,7 @@ std::optional<std::string> tr_announce_list::announceToScrape(std::string_view a
     auto constexpr oldval = std::string_view{ "/announce" };
     if (auto pos = announce.rfind(oldval.front()); pos != std::string_view::npos && announce.find(oldval, pos) == pos)
     {
-        auto const prefix = announce.substr(0, pos);
-        auto const suffix = announce.substr(pos + std::size(oldval));
-        return fmt::format(FMT_STRING("{:s}/scrape{:s}"), prefix, suffix);
+        return std::string{ announce }.replace(pos, std::size(oldval), "/scrape");
     }
 
     // some torrents with UDP announce URLs don't have /announce
